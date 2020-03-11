@@ -5,4 +5,4 @@
  * @author cyz
  *
  */
-package com.cyz.login.ouser.dao;
+package com.cyz.login.ouser.mapper;

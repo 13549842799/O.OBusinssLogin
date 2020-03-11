@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyz.login.ouser.mapper.OuserMapper">
+
+     <resultMap id="OuserMap" type="ouser">
+        <id property="id" column="id"/>
+        <result property="username" column="accountname"/>
+        <result property="password" column="password"/>
+        <result property="delflag" column="delflag"/>
+    </resultMap>
+
+     <sql id="base_column">
+        ou.id,ou.accountname,ou.password,ou.delflag
+     </sql>
+     
+     <select id="getList" resultMap="OuserMap">
+     select * from admin
+     </select>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO admin
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="username != null ">
+                accountname,
+                </if>
+                <if test="password != null ">
+                password,
+                </if>             
+                <if test="delflag != null ">
+                delflag
+                </if>
+            </trim>
+            <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+                <if test="accountname != null ">
+                #{accountname},
+                </if>
+                <if test="password != null ">
+                #{password},
+                </if>
+                <if test="delflag != null ">
+                #{delflag,jdbcType=TINYINT}
+                </if>
+            </trim>
+    </insert>
+
+    <update id="delete" >
+        UPDATE admin set delflag = #{delflag}
+         WHERE id = #{ id })
+    </update>
+
+    <update id="update" parameterType="ouser">
+        UPDATE admin SET 
+            <trim suffixOverrides=","> 
+                <if test="accountname != null ">
+                accountname = #{accountname},
+                </if>
+                <if test="password != null ">
+                password = #{password},
+                </if>             
+            </trim>
+         WHERE id = #{id}
+    </update>
+
+    <select id="get" resultMap="OuserMap" parameterType="ouser">
+        SELECT 
+        <include refid="base_column"/>
+        FROM admin ou
+        <where>
+        <trim prefixOverrides="AND">
+            <if test="id != null">
+            AND ou.id = #{id}
+            </if>
+            <if test="username != null">
+            AND ou.accountname = #{username}
+            </if>
+            <if test="delflag != null">
+            AND ou.delflag = #{delflag,jdbcType=TINYINT}
+            </if>
+        </trim>
+        </where>
+    </select>
+
+</mapper>
